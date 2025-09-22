@@ -41,7 +41,7 @@ services:
       redis:
         condition: service_started
     env_file:
-      - .env
+      - ./backend/.env
 
   celery:
     build: ./backend
@@ -56,7 +56,7 @@ services:
       - db
       - redis
     env_file:
-      - .env
+      - ./backend/.env
 
   celery-beat:
     build: ./backend
@@ -71,17 +71,19 @@ services:
       - db
       - redis
     env_file:
-      - .env
+      - ./backend/.env
 
-  # Frontend service (to be configured when Vue.js frontend is added)
-  # frontend:
-  #   build: ./frontend
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./frontend:/app
-  #   depends_on:
-  #     - backend
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
